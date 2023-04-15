@@ -93,14 +93,20 @@ class WhatsExtract:
                 oldPage = self.browser.page_source
                 if oldPage == self.browser.page_source:
                     time.sleep(3)
-                    self.__sendPageUP(10)
+                    self.__sendPageUP(30)
                     oldPage = self.browser.page_source
                     if oldPage == self.browser.page_source:
-                        break
+                        time.sleep(10)
+                        self.__sendPageUP(60)
+                        oldPage = self.browser.page_source
+                        if oldPage == self.browser.page_source:
+                            break
 
     def getMessages(self, chatName, all=False):
         self.__openChat(chatName)
         self.__wait("_7GVCb")
+
+        self.browser.find_elements(By.CLASS_NAME, "_7GVCb")[0].click()
 
         if all:
             self.__scrollToView("_7GVCb")
@@ -162,35 +168,51 @@ class WhatsExtract:
         except:
             msg = "MEDIA"
 
-        try:
-            repliedTo = message.find_element(By.CLASS_NAME, "_3IzYj").text
+        try:  # For all chat
+            # Check for reply
             repliedMsg = message.find_element(
                 By.CLASS_NAME, "quoted-mention._11JPr").text
-        except:
+            # If didnt crash, means there is reply
+            # Check for reply to for Other
             try:
-                repliedTo = message.find_element(By.CLASS_NAME, "_3IzYj").text
-                repliedMsg = message.find_element(
-                    By.CLASS_NAME, "quoted-mention._11JPr").text
-            except:
-                repliedTo = "NONE"
-                repliedMsg = "NONE"
+                repliedTo = message.find_elements(
+                    By.CLASS_NAME, "_3FuDI._11JPr")[-1].text  # Any Reply to Other Person
+                # Check if you exists somehwere
+                for z in message.find_elements(By.CLASS_NAME, "_11JPr"):
+                    if "You" in z.text:
+                        repliedTo = "You"
+            except:  # Wildcard reply to me
+                repliedTo = "You"  # Reply to me
 
-        date = message.find_element(By.CLASS_NAME, "l7jjieqr").text
+        except:  # There is not a reply
+            repliedTo = "NONE"
+            repliedMsg = "NONE"
+
+        date = message.find_elements(
+            By.CLASS_NAME, "l7jjieqr.fewfhwl7")[-1].text
 
         # Try to get sender name if none means private chat
         try:
             # Other person name in group chat
             msgSender = message.find_element(
-                By.CLASS_NAME, "_3FuDI.ajgl1lbb.edeob0r2._11JPr").text
-        except:
+                By.CLASS_NAME, "_3IzYj._6rIWC.p357zi0d").text
+        except:  # For private chat
             if "message-out" in message.get_attribute("class"):
                 msgSender = "You"  # My name in private chat and group chat
             else:
-                # Other person name in Private chat | Also the chat title
-                msgSender = self.__getChatName()
+                # Other person name in Private chat and group chat where they spam messages one after other
+                data_plain_t = message.find_elements(
+                    By.CLASS_NAME, "copyable-text")[0].get_attribute('data-pre-plain-text')
+                msgSender = data_plain_t[data_plain_t.find(
+                    "] ")+2:-1]  # Parse name from data
 
+        # Different wordarounds | Should be solved
         if msg == "":
             msg = "Emoji"
+        if repliedMsg == "":
+            repliedMsg = "Emoji"
+        if len(repliedMsg) == 4 and repliedMsg[1] == ":":
+            repliedMsg = "VOICE NOTE"
         return (date, msgSender, msg, repliedTo, repliedMsg)
 
     def __isLogin(self):
@@ -220,7 +242,7 @@ class WhatsExtract:
 
     def __saveToCSV(self, data, name):
         fileName = name + ".csv"
-        with open(fileName, 'w', newline='') as file:
+        with open(fileName, 'w', encoding="utf-8", newline='') as file:
             writer = csv.writer(file)
             writer.writerow(("Date", "Sender", "Message",
                             "Replied To", "Replied Message"))
@@ -231,4 +253,4 @@ class WhatsExtract:
 
 bot = WhatsExtract(silent=True, headless=False)
 bot.login()
-bot.getMessages("Bawa", all=True)
+bot.getMessages("Bawa", all=False)
