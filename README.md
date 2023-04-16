@@ -5,7 +5,8 @@
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![Selenium](https://img.shields.io/badge/-selenium-%43B02A?style=for-the-badge&logo=selenium&logoColor=white)
 ![Google Chrome](https://img.shields.io/badge/Google%20Chrome-4285F4?style=for-the-badge&logo=GoogleChrome&logoColor=white)
-This is selenium based python framework, that will allow you extract messages from whatsapp, that will be saved in a .CSV file. You can latter run data analysis on this or train a model.
+
+This is a selenium based python framework, that will allow you extract messages from whatsapp, that will be saved in a .CSV file. You can latter run data analysis on this or train a model.
 
 The App uses Web.Whatsapp.com to extract messages all in an automated fashion. You will be provided with a QR-Code on first run to login. After that you can start extracting in Headless mode. Data is saved in UserData folder in same directory as your script.
 
