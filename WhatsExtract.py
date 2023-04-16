@@ -200,8 +200,11 @@ class WhatsExtract:
             repliedTo = "NONE"
             repliedMsg = "NONE"
 
-        date = message.find_elements(
-            By.CLASS_NAME, "l7jjieqr.fewfhwl7")[-1].text
+        try:
+            date = message.find_elements(
+                By.CLASS_NAME, "l7jjieqr.fewfhwl7")[-1].text
+        except:
+            date = "NONE"
 
         # Try to get sender name if none means private chat
         try:
@@ -270,4 +273,4 @@ if __name__ == "__main__":
 
     bot = WhatsExtract(silent=True, headless=False)
     bot.login()
-    bot.getMessages("Hassan", scroll=10)
+    bot.getMessages("Sarim Sabeh", scroll=10)
