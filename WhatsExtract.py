@@ -102,14 +102,26 @@ class WhatsExtract:
                         if oldPage == self.browser.page_source:
                             break
 
-    def getMessages(self, chatName, all=False):
+    def __scroll(self, count, e):
+        for i in range(count):
+            self.__sendPageUP(10)
+            time.sleep(1.5)
+
+    def getMessages(self, chatName, all=False, scroll=None, manualSync=False):
         self.__openChat(chatName)
         self.__wait("_7GVCb")
 
         self.browser.find_elements(By.CLASS_NAME, "_7GVCb")[0].click()
 
-        if all:
-            self.__scrollToView("_7GVCb")
+        if manualSync:
+            print("Please sync manually | Press Enter to continue")
+            input()
+        else:
+            if scroll:
+                self.__scroll(scroll, "_7GVCb")
+
+            if all:
+                self.__scrollToView("_7GVCb")
 
         time.sleep(3)
         messages = self.browser.find_elements(By.CLASS_NAME, "_7GVCb")
@@ -123,43 +135,43 @@ class WhatsExtract:
 
         self.__saveToCSV(fetchedMessages, self.__getChatName())
 
-    def getMessagesOutgoing(self, chatName, all=False):
-        self.__openChat(chatName)
-        self.__wait("message-out")
+    # def getMessagesOutgoing(self, chatName, all=False):
+    #     self.__openChat(chatName)
+    #     self.__wait("message-out")
 
-        if all:
-            self.__scrollToView("message-out")
+    #     if all:
+    #         self.__scrollToView("message-out")
 
-        time.sleep(3)
-        messages = self.browser.find_elements(By.CLASS_NAME, "message-out")
+    #     time.sleep(3)
+    #     messages = self.browser.find_elements(By.CLASS_NAME, "message-out")
 
-        fetchedMessages = []
-        for message in messages:
-            msg = self.__parseMessage(message)
-            fetchedMessages.append(msg)
-            print(msg)
-            print("------------------")
+    #     fetchedMessages = []
+    #     for message in messages:
+    #         msg = self.__parseMessage(message)
+    #         fetchedMessages.append(msg)
+    #         print(msg)
+    #         print("------------------")
 
-        self.__saveToCSV(fetchedMessages, self.__getChatName())
+    #     self.__saveToCSV(fetchedMessages, self.__getChatName())
 
-    def getMessagesIncomming(self, chatName, all=False):
-        self.__openChat(chatName)
-        self.__wait("message-in")
+    # def getMessagesIncomming(self, chatName, all=False):
+    #     self.__openChat(chatName)
+    #     self.__wait("message-in")
 
-        if all:
-            self.__scrollToView("message-in")
+    #     if all:
+    #         self.__scrollToView("message-in")
 
-        time.sleep(3)
-        messages = self.browser.find_elements(By.CLASS_NAME, "message-in")
+    #     time.sleep(3)
+    #     messages = self.browser.find_elements(By.CLASS_NAME, "message-in")
 
-        fetchedMessages = []
-        for message in messages:
-            msg = self.__parseMessage(message)
-            fetchedMessages.append(msg)
-            print(msg)
-            print("------------------")
+    #     fetchedMessages = []
+    #     for message in messages:
+    #         msg = self.__parseMessage(message)
+    #         fetchedMessages.append(msg)
+    #         print(msg)
+    #         print("------------------")
 
-        self.__saveToCSV(fetchedMessages, self.__getChatName())
+    #     self.__saveToCSV(fetchedMessages, self.__getChatName())
 
     def __parseMessage(self, message):
         try:
@@ -201,10 +213,13 @@ class WhatsExtract:
                 msgSender = "You"  # My name in private chat and group chat
             else:
                 # Other person name in Private chat and group chat where they spam messages one after other
-                data_plain_t = message.find_elements(
-                    By.CLASS_NAME, "copyable-text")[0].get_attribute('data-pre-plain-text')
-                msgSender = data_plain_t[data_plain_t.find(
-                    "] ")+2:-1]  # Parse name from data
+                try:
+                    data_plain_t = message.find_elements(
+                        By.CLASS_NAME, "copyable-text")[0].get_attribute('data-pre-plain-text')
+                    msgSender = data_plain_t[data_plain_t.find(
+                        "] ")+2:-2]  # Parse name from data
+                except:
+                    msgSender = self.__getChatName()
 
         # Different wordarounds | Should be solved
         if msg == "":
@@ -251,6 +266,8 @@ class WhatsExtract:
             #     writer.writerows(item[0], item[1], item[2], item[3])
 
 
-bot = WhatsExtract(silent=True, headless=False)
-bot.login()
-bot.getMessages("Bawa", all=False)
+if __name__ == "__main__":
+
+    bot = WhatsExtract(silent=True, headless=False)
+    bot.login()
+    bot.getMessages("Hassan", scroll=10)
