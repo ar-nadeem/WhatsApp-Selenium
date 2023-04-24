@@ -9,6 +9,8 @@ import csv
 import os
 import sys
 import time
+import asyncio
+
 
 print("User data will be saved in: {}".format(
     os.path.join(sys.path[0], "UserData")))
@@ -179,6 +181,61 @@ class Whatsapp:
     def getMessagesIncomming(self, chatName, all=False, scroll=None, manualSync=False):
         self.getMessages(chatName, all, scroll, manualSync, "message-in")
 
+    # Call given function with every new incomming message
+
+    def hookIncomming(self, chatName, func):
+        self.oldHookedMessage = None
+        asyncio.run(self.__hookIncomming(chatName, func))
+
+    async def __hookIncomming(self, chatName, func):
+        self.__openChat(chatName)
+        self.__wait("message-in")
+
+        message = self.browser.find_elements(By.CLASS_NAME, "message-in")[-1]
+
+        while True:
+            while self.oldHookedMessage == message:
+                await asyncio.sleep(0.1)
+                message = self.browser.find_elements(
+                    By.CLASS_NAME, "message-in")[-1]
+
+            await asyncio.create_task(func(message, self.__parseMessage(message)))
+            self.oldHookedMessage = message
+
+    def replyTo(self, element, msg):
+        print("I am Called !")
+        dropDown = 'span[data-testid="down-context"][data-icon="down-context"]'
+
+        # Try again and again. As new message cancels the all clicks.
+
+        # Click the message to make the drop down appear
+        ActionChains(self.browser).move_to_element(
+            element.find_element(By.CLASS_NAME, "_1-lf9._3mSPV")).click().perform()
+
+        # Click Drowndown
+        dropDown = self.browser.find_element(By.CSS_SELECTOR, dropDown)
+        ActionChains(self.browser).move_to_element(
+            dropDown).click().perform()
+
+        # Click Reply
+        time.sleep(0.1)  # Wait for the reply button to appear
+
+        self.browser.find_element(
+            By.CSS_SELECTOR, 'div[aria-label="Reply"]').click()
+
+        # Send the message
+        self.sendMessage(msg)
+
+    def sendMessage(self, msg):
+        # Click on message box
+        myElem = self.browser.find_element(
+            By.XPATH, "/html/body/div[1]/div/div/div[5]/div/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[2]")
+        ActionChains(self.browser).move_to_element(myElem).click().perform()
+        ActionChains(self.browser).send_keys(msg).perform()
+        # Click send button
+        self.browser.find_element(
+            By.XPATH, "/html/body/div[1]/div/div/div[5]/div/footer/div[1]/div/span[2]/div/div[2]/div[2]/button").click()
+
     def __parseMessage(self, message):
         try:
             msg = message.find_element(
@@ -242,6 +299,25 @@ class Whatsapp:
 
 if __name__ == "__main__":
 
-    bot = Whatsapp(silent=True, headless=False)
+    bot = Whatsapp(silent=True, headless=True)
     bot.login()
-    bot.getMessages("AbdulRahman", manualSync=True)
+
+    responses = {"hello": "Hello, Nice to meet you !", "How are you ?": "I'm fine, thank you !",
+                 "Who are you ?": "My name is RevBot, I'm a chatbot made by AbdulRahman Nadeem."}
+
+    async def func(element, msg):
+        print(msg)
+        if (msg[2] == "EXIT!"):
+            bot.browser.close()
+            exit()
+
+        if (msg[2].lower() == "help"):
+            bot.replyTo(
+                element, "My commands are : \n", responses)
+        else:
+            try:
+                bot.replyTo(element, responses[msg[2].lower()])
+            except:
+                bot.replyTo(element, "I don't understand !")
+
+    bot.hookIncomming("AbdulRahman", func)
