@@ -1,3 +1,6 @@
+# URGENT FIX \n
+# CONVERT \n to selenium KEY shift+enter
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
@@ -209,7 +212,7 @@ class Whatsapp:
 
         # Click the message to make the drop down appear
         ActionChains(self.browser).move_to_element(
-            element.find_element(By.CLASS_NAME, "_1-lf9._3mSPV")).click().perform()
+            element.find_elements(By.CLASS_NAME, "_1-lf9._3mSPV")[0]).click().perform()
 
         # Click Drowndown
         dropDown = self.browser.find_element(By.CSS_SELECTOR, dropDown)
@@ -312,7 +315,7 @@ if __name__ == "__main__":
 
         if (msg[2].lower() == "help"):
             bot.replyTo(
-                element, "My commands are : \n", responses)
+                element, str("My commands are : " + str(responses)))
         else:
             try:
                 bot.replyTo(element, responses[msg[2].lower()])
