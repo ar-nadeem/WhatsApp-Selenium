@@ -1,4 +1,4 @@
-# WhatsAppExtractor
+# WhatsApp-Selenium
 
 ## What is this
 
@@ -6,7 +6,9 @@
 ![Selenium](https://img.shields.io/badge/-selenium-%43B02A?style=for-the-badge&logo=selenium&logoColor=white)
 ![Google Chrome](https://img.shields.io/badge/Google%20Chrome-4285F4?style=for-the-badge&logo=GoogleChrome&logoColor=white)
 
-This is a selenium based python framework, that will allow you extract messages from whatsapp, which will be saved in a .CSV file. You can later run data analysis on it or train a model.
+This is fully automated version of Whatsapp on Selenium. Cause Meta wants you to pay for their own.
+
+This is a selenium based python framework, that will allow you extract or send messages from whatsapp, which will be saved in a .CSV file. You can later run data analysis on it or train a model.
 
 The App uses Web.Whatsapp.com to extract messages in an automated fashion. You will be provided with a QR-Code on first run to login. After that you can start extracting in Headless mode. Browser Data/Session is saved in UserData folder in same directory as your script.
 
@@ -57,6 +59,45 @@ Has 4 arguments
 2. `all` has two options `True` or `False`. If set to True, will true to extract all available chats. Although it may stop before that, see **_OPTION 4_**.
 3. `scroll` You can set to any integer for scolling some of the chat, to extract more messages.
 4. `manualSync` has two options `True` or `False`. If set to True, script will wait for your input before it start extracting messages. Its so can manually scroll to where you want the messages extraction to begin from.
+
+#### Function replyTo
+
+Has 2 arguments
+
+1. `element` - This is message element, you want to reply to. It is a selenium object
+2. `msg` Its the message you want to send.
+
+#### Function hookIncomming
+
+Has 2 arguments. Return last incomming message element and parsed message.
+
+1. `chatName` - This is chat name you want to listen to.
+2. `func` This is a async function you set to do things with the message returned.
+
+Example:
+
+```python
+responses = {"hello": "Hello, Nice to meet you !", "How are you ?": "I'm fine, thank you !",
+                "Who are you ?": "My name is Bot, I'm a chatbot made by AbdulRahman Nadeem."}
+
+async def func(element, msg):
+    print(msg)
+    if (msg[2] == "EXIT!"):
+        bot.browser.close()
+        exit()
+
+    if (msg[2].lower() == "help"):
+        bot.replyTo(
+            element, "My commands are : \n", responses)
+    else:
+        try:
+            bot.replyTo(element, responses[msg[2].lower()])
+        except:
+            bot.replyTo(element, "I don't understand !")
+
+bot.hookIncomming("AbdulRahman", func)
+
+```
 
 ## BUGS
 
