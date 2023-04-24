@@ -78,7 +78,7 @@ Example:
 
 ```python
 responses = {"hello": "Hello, Nice to meet you !", "How are you ?": "I'm fine, thank you !",
-                "Who are you ?": "My name is Bot, I'm a chatbot made by AbdulRahman Nadeem."}
+                "Who are you ?": "My name is RevBot, I'm a chatbot made by AbdulRahman Nadeem."}
 
 async def func(element, msg):
     print(msg)
@@ -88,7 +88,7 @@ async def func(element, msg):
 
     if (msg[2].lower() == "help"):
         bot.replyTo(
-            element, "My commands are : \n", responses)
+            element, str("My commands are : " + str(responses)))
     else:
         try:
             bot.replyTo(element, responses[msg[2].lower()])
