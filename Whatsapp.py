@@ -203,7 +203,6 @@ class Whatsapp:
             self.oldHookedMessage = message
 
     def replyTo(self, element, msg):
-        print("I am Called !")
         dropDown = 'span[data-testid="down-context"][data-icon="down-context"]'
 
         # Try again and again. As new message cancels the all clicks.
