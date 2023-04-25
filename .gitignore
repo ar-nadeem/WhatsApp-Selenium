@@ -1,3 +1,4 @@
 /UserData*
 *.csv
 main.py
+__pycache__/
