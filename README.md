@@ -27,7 +27,7 @@ pip install -r requirements.txt
 3. You can import the `WhatsExtract.py` into your main python file.
 
 ```python
-from WhatsExtract import WhatsExtract
+from Whatsapp import Whatsapp
 ```
 
 ### Usage
@@ -36,7 +36,7 @@ Now you can use the object of the class to extract message.
 Example 1:
 
 ```python
-bot = WhatsExtract(silent=True, headless=False)
+bot = Whatsapp(silent=True, headless=False)
 bot.login()
 bot.getMessages("Alex", scroll=10)
 ```
