@@ -47,6 +47,11 @@ class Whatsapp:
         self.browser.get('https://web.whatsapp.com')
         if not self.__isLogin():
             print("Please scan the QR code")
+            print("Screenshot of QR code will be saved in: {}".format(
+                os.path.join(sys.path[0], "QRCode.png")))
+            self.browser.save_screenshot(
+                os.path.join(sys.path[0], "QRCode.png"))
+
             while not self.__isLogin():
                 pass
             print("Login successful")
@@ -135,6 +140,7 @@ class Whatsapp:
 
 ###################################### READ MESSAGES #######################################
 
+
     def getChats(self):
         self.__wait("two")
         chats = self.browser.find_elements(By.CLASS_NAME, "_11JPr")
@@ -213,6 +219,8 @@ class Whatsapp:
         # Click the message to make the drop down appear
         ActionChains(self.browser).move_to_element(
             element.find_elements(By.CLASS_NAME, "l7jjieqr.fewfhwl7")[0]).click().perform()
+
+        time.sleep(0.1)
 
         # Click Drowndown
         dropDown = self.browser.find_element(By.CSS_SELECTOR, dropDown)
