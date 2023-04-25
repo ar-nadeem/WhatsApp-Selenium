@@ -212,7 +212,7 @@ class Whatsapp:
 
         # Click the message to make the drop down appear
         ActionChains(self.browser).move_to_element(
-            element.find_elements(By.CLASS_NAME, "_1-lf9._3mSPV")[0]).click().perform()
+            element.find_elements(By.CLASS_NAME, "l7jjieqr.fewfhwl7")[0]).click().perform()
 
         # Click Drowndown
         dropDown = self.browser.find_element(By.CSS_SELECTOR, dropDown)
@@ -299,27 +299,27 @@ class Whatsapp:
         return (date, msgSender, msg, repliedTo, repliedMsg)
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    bot = Whatsapp(silent=True, headless=True)
-    bot.login()
+#     # bot = Whatsapp(silent=True, headless=True)
+#     # bot.login()
 
-    responses = {"hello": "Hello, Nice to meet you !", "How are you ?": "I'm fine, thank you !",
-                 "Who are you ?": "My name is RevBot, I'm a chatbot made by AbdulRahman Nadeem."}
+#     # responses = {"hello": "Hello, Nice to meet you !", "How are you ?": "I'm fine, thank you !",
+#     #              "Who are you ?": "My name is RevBot, I'm a chatbot made by AbdulRahman Nadeem."}
 
-    async def func(element, msg):
-        print(msg)
-        if (msg[2] == "EXIT!"):
-            bot.browser.close()
-            exit()
+#     # async def func(element, msg):
+#     #     print(msg)
+#     #     if (msg[2] == "EXIT!"):
+#     #         bot.browser.close()
+#     #         exit()
 
-        if (msg[2].lower() == "help"):
-            bot.replyTo(
-                element, str("My commands are : " + str(responses)))
-        else:
-            try:
-                bot.replyTo(element, responses[msg[2].lower()])
-            except:
-                bot.replyTo(element, "I don't understand !")
+#     #     if (msg[2].lower() == "help"):
+#     #         bot.replyTo(
+#     #             element, str("My commands are : " + str(responses)))
+#     #     else:
+#     #         try:
+#     #             bot.replyTo(element, responses[msg[2].lower()])
+#     #         except:
+#     #             bot.replyTo(element, "I don't understand !")
 
-    bot.hookIncomming("AbdulRahman", func)
+#     # bot.hookIncomming("AbdulRahman", func)
