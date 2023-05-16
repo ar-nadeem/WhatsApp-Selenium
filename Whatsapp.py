@@ -26,6 +26,10 @@ class Whatsapp:
             self.__addOption("--log-level=3")
         if headless:
             self.__addOption("--headless")
+            self.__addOption("--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36")
+            self.__addOption("--window-size=1920,1080")
+            self.__addOption("--no-sandbox")
+
 
         self.__addOption(
             "user-data-dir={}".format(os.path.join(sys.path[0], "UserData")))
@@ -47,11 +51,11 @@ class Whatsapp:
         self.browser.get('https://web.whatsapp.com')
         if not self.__isLogin():
             print("Please scan the QR code")
-            print("Screenshot of QR code will be saved in: {}".format(
+            print("After 3 sec - Screenshot of QR code will be saved in: {}".format(
                 os.path.join(sys.path[0], "QRCode.png")))
+            time.sleep(3)
             self.browser.save_screenshot(
                 os.path.join(sys.path[0], "QRCode.png"))
-
             while not self.__isLogin():
                 pass
             print("Login successful")
@@ -96,7 +100,10 @@ class Whatsapp:
     def __search(self, query):
         self.browser.find_element(
             By.CLASS_NAME, "copyable-text").send_keys(query)
-        return self.__wait("matched-text")
+        self.browser.save_screenshot(
+                os.path.join(sys.path[0], "Searched !.png"))
+        time.sleep(0.25)
+        return self.browser.find_element(By.CLASS_NAME,"matched-text")
 
     def __scrollToTop(self, e):
         e[0].click()
@@ -140,7 +147,6 @@ class Whatsapp:
 
 ###################################### READ MESSAGES #######################################
 
-
     def getChats(self):
         self.__wait("two")
         chats = self.browser.find_elements(By.CLASS_NAME, "_11JPr")
@@ -151,13 +157,16 @@ class Whatsapp:
 
     def __openChat(self, q):
         # Get the first chat from search results
-        self.__search(q).click()
+        ActionChains(self.browser).move_to_element(
+                    self.__search(q)).click().click().perform()
+
 
     def __getChatName(self):
         return self.browser.find_element(By.CLASS_NAME, "_2rlF7").text
 
     def getMessages(self, chatName, all=False, scroll=None, manualSync=False, element="_7GVCb"):
         self.__openChat(chatName)
+        
         self.__wait(element)
 
         self.browser.find_elements(By.CLASS_NAME, element)[0].click()
@@ -198,6 +207,8 @@ class Whatsapp:
 
     async def __hookIncomming(self, chatName, func):
         self.__openChat(chatName)
+        time.sleep(0.1)
+        self.browser.save_screenshot(os.path.join(sys.path[0], "Waiting.png"))
         self.__wait("message-in")
 
         message = self.browser.find_elements(By.CLASS_NAME, "message-in")[-1]
@@ -212,29 +223,35 @@ class Whatsapp:
             self.oldHookedMessage = message
 
     def replyTo(self, element, msg):
+        totalretries = 5
         dropDown = 'span[data-testid="down-context"][data-icon="down-context"]'
 
         # Try again and again. As new message cancels the all clicks.
+        while True and totalretries > 0:
+            try:
+                # Click the message to make the drop down appear
+                ActionChains(self.browser).move_to_element(
+                    element.find_elements(By.CLASS_NAME, "l7jjieqr.fewfhwl7")[0]).click().perform()
 
-        # Click the message to make the drop down appear
-        ActionChains(self.browser).move_to_element(
-            element.find_elements(By.CLASS_NAME, "l7jjieqr.fewfhwl7")[0]).click().perform()
+                # Click Drowndown
+                dropDown = self.browser.find_element(By.CSS_SELECTOR, dropDown)
+                ActionChains(self.browser).move_to_element(
+                    dropDown).click().perform()
 
-        time.sleep(0.1)
+                # Click Reply
+                time.sleep(0.1)  # Wait for the reply button to appear
 
-        # Click Drowndown
-        dropDown = self.browser.find_element(By.CSS_SELECTOR, dropDown)
-        ActionChains(self.browser).move_to_element(
-            dropDown).click().perform()
+                self.browser.find_element(
+                    By.CSS_SELECTOR, 'div[aria-label="Reply"]').click()
 
-        # Click Reply
-        time.sleep(0.1)  # Wait for the reply button to appear
-
-        self.browser.find_element(
-            By.CSS_SELECTOR, 'div[aria-label="Reply"]').click()
-
-        # Send the message
-        self.sendMessage(msg)
+                # Send the message
+                self.sendMessage(msg)
+                break
+            except:
+                print("Failed ! Retrying... tries left: " + str(totalretries))
+                time.sleep(0.25)
+                totalretries -= 1
+                pass
 
     def sendMessage(self, msg):
         # Click on message box
