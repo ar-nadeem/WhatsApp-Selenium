@@ -162,9 +162,9 @@ class Whatsapp:
 
 
     def __getChatName(self):
-        return self.browser.find_element(By.CLASS_NAME, "_2rlF7").text
+        return self.browser.find_element(By.CLASS_NAME, "_3W2ap").text
 
-    def getMessages(self, chatName, all=False, scroll=None, manualSync=False, element="_7GVCb"):
+    def getMessages(self, chatName, all=False, scroll=None, manualSync=False, element="_1AOLJ._1jHIY"):
         self.__openChat(chatName)
         
         self.__wait(element)
