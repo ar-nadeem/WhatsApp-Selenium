@@ -9,7 +9,7 @@ import asyncio
 
 jbh = ["Ach.", "Ok sir.","JBH +1"]
 
-bawa = ["I love bawa ! <3 ", "Is someone talking about bawa ? Bawa is king !"]
+bawa = ["Is someone talking about bawa ? Bawa is king !"]
 
 
 bott = ["Hi from bot"]
