@@ -1,5 +1,8 @@
 # WhatsApp-Selenium
 
+## Out of Date
+Currently I dont have enough free time to work on this, this version might be outdated due to changes in whatsapp web UI. However seeing the amount of forks and stars, I will try to find time to update this.
+
 ## What is this
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
