@@ -1,0 +1,78 @@
+{
+    "chatPannel": {
+        "type": "ID",
+        "value": "pane-side"
+    },
+    "chatPannelElement": {
+        "type": "XPATH",
+        "value": "/html/body/div[1]/div/div[1]/div[3]/div/div[3]/div/div[3]/div[1]/div/div/div"
+    },
+    "chatNames_Group": {
+        "type": "XPATH",
+        "value": "/html/body/div[1]/div/div[1]/div[3]/div/div[3]/div/div[3]/div[1]/div/div/div/div/div/div/div[2]/div[1]/div[1]/span"
+    },
+    "chatNames_Singluar": {
+        "type": "XPATH",
+        "value": "/html/body/div[1]/div/div[1]/div[3]/div/div[3]/div/div[3]/div[1]/div/div/div/div/div/div/div[2]/div[1]/div[1]/div/div/span"
+    },
+    "searchBox": {
+        "type": "XPATH",
+        "value": "/html/body/div[1]/div/div[1]/div[3]/div/div[3]/div/div[1]/div/div[2]/div/div/div[1]/p"
+    },
+    "searchResults": {
+        "type": "XPATH",
+        "value": "/html/body/div[1]/div/div[1]/div[3]/div/div[3]/div/div[3]/div[1]/div/div/div[2]/div/div/div/div[2]"
+    },
+    "chatBody": {
+        "type": "XPATH",
+        "value": "/html/body/div[1]/div/div[1]/div[3]/div/div[4]/div/div[2]/div/div[2]"
+    },
+    "message": {
+        "type": "CSS_SELECTOR",
+        "value": "div.focusable-list-item._amjy._amjw.x1klvx2g.xahtqtb"
+    },
+    "currentChatName": {
+        "type": "XPATH",
+        "value": "/html/body/div[1]/div/div[1]/div[3]/div/div[4]/div/header/div[2]/div/div/div/div/span"
+    },
+    "messageDate": {
+        "type": "CSS_SELECTOR",
+        "value": "span.x1rg5ohu.x16dsc37"
+    },
+    "messageText": {
+        "type": "CSS_SELECTOR",
+        "value": "span.selectable-text.copyable-text"
+    },
+    "messageSenderGroup": {
+        "type": "CSS_SELECTOR",
+        "value": "span._ahxt.x1ypdohk.xt0b8zv._ao3e"
+    },
+    "messageSenderGroupUnknownNumber": {
+        "type": "CSS_SELECTOR",
+        "value": "span._ahx_[role='button']"
+    },
+    "repliedMessage": {
+        "type": "CSS_SELECTOR",
+        "value": "span.quoted-mention._ao3e"
+    },
+    "repliedToYou": {
+        "type": "CSS_SELECTOR",
+        "value": "div._ahxj.xijeqtt"
+    },
+    "repliedToOtherDM": {
+        "type": "CSS_SELECTOR",
+        "value": "div._ahxj.xkgnp4b"
+    },
+    "repliedToGroup": {
+        "type": "CSS_SELECTOR",
+        "value": "div > div._ahxj.x78zum5 > span"
+    },
+    "quotedMessage": {
+        "type": "CSS_SELECTOR",
+        "value": "div[aria-label='Quoted message']"
+    },
+    "currentChatNameGroup": {
+        "type": "XPATH",
+        "value": "/html/body/div[1]/div/div[1]/div[3]/div/div[4]/div/header/div[2]/div[1]/div/span"
+    }
+}
