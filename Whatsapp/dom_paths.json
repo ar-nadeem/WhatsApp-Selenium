@@ -1,0 +1,18 @@
+{
+    "chatPannel": {
+        "type": "ID",
+        "value": "pane-side"
+    },
+    "chatPannelElement": {
+        "type": "XPATH",
+        "value": "/html/body/div[1]/div/div[1]/div[3]/div/div[3]/div/div[3]/div[1]/div/div/div"
+    },
+    "chatNames_Group": {
+        "type": "XPATH",
+        "value": "/html/body/div[1]/div/div[1]/div[3]/div/div[3]/div/div[3]/div[1]/div/div/div/div/div/div/div[2]/div[1]/div[1]/span"
+    },
+    "chatNames_Singluar": {
+        "type": "XPATH",
+        "value": "/html/body/div[1]/div/div[1]/div[3]/div/div[3]/div/div[3]/div[1]/div/div/div/div/div/div/div[2]/div[1]/div[1]/div/div/span"
+    }
+}

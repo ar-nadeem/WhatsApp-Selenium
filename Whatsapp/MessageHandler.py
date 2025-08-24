@@ -4,17 +4,19 @@ import csv
 import os
 import sys
 import time
+from typing import List
 import asyncio
 
 from .BaseWhatsapp import BaseWhatsapp
 
-
 class MessageHandler(BaseWhatsapp):
     """Class for handling WhatsApp messages"""
     
-    def __init__(self, browser, xpath_dict):
-        super().__init__(browser, xpath_dict)
+    def __init__(self, browser, DomPathsDict):
+        super().__init__(browser, DomPathsDict)
         self.oldHookedMessage = None
+        self.DomPathsDict = DomPathsDict
+
     
     def __saveToCSV(self, data, name):
         """Save message data to a CSV file"""
@@ -43,15 +45,63 @@ class MessageHandler(BaseWhatsapp):
         """Get the name of the current chat"""
         return self.browser.find_element(By.CLASS_NAME, "_3W2ap").text
     
-    def getChats(self):
+    def getChats(self) -> List[str]:
         """Get a list of all chats"""
-        self._BaseWhatsapp__wait("two")
-        chats = self.browser.find_elements(
-            By.XPATH, self.XpathDict["chatNames"])
+        self._BaseWhatsapp__wait(self.DomPathsDict["chatPannel"]["value"])
+
+
+        # Scroll until old Names = new Names
+        chats = []
+        # Group Names
+        oldNames = [el.text for el in self.browser.find_elements(
+            getattr(By, self.DomPathsDict["chatNames_Group"]["type"].upper()), 
+            self.DomPathsDict["chatNames_Group"]["value"])]
+        # Single Names
+        oldNames += [el.text for el in self.browser.find_elements(
+            getattr(By, self.DomPathsDict["chatNames_Singluar"]["type"].upper()), 
+            self.DomPathsDict["chatNames_Singluar"]["value"])]
+        
+        newNames =[]
+        for name in oldNames:
+            chats.append(name)
+        
+        while True:
+            scrollFrom = self.browser.find_elements(
+            getattr(By, self.DomPathsDict["chatPannelElement"]["type"].upper()),
+            self.DomPathsDict["chatPannelElement"]["value"])[-1]
+            
+            super()._BaseWhatsapp__mouseScroll(scrollFrom,500)
+            time.sleep(0.1)
+
+            # Get New Names
+            # Group Names
+            newNames = [el.text for el in self.browser.find_elements(
+            getattr(By, self.DomPathsDict["chatNames_Group"]["type"].upper()), 
+            self.DomPathsDict["chatNames_Group"]["value"])]
+            # Single Names
+            newNames += [el.text for el in self.browser.find_elements(
+            getattr(By, self.DomPathsDict["chatNames_Singluar"]["type"].upper()), 
+            self.DomPathsDict["chatNames_Singluar"]["value"])]
+
+            if oldNames == newNames:
+                break
+            oldNames = newNames
+            
+            for name in newNames:
+                chats.append(name)
+
+        
+
+
+        # Print only unique chat names
+        uniqueChats = []
         for chat in chats:
-            if (chat.text == ""):
+            if (chat == ""):
                 continue
-            print(chat.text)
+            if chat not in uniqueChats:
+                uniqueChats.append(chat)
+                print(chat)
+        return uniqueChats
     
     def getMessages(self, chatName, all=False, scroll=None, manualSync=False, element="_1AOLJ._1jHIY"):
         """Get messages from a chat"""

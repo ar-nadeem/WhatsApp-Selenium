@@ -19,10 +19,10 @@ class Whatsapp:
     def __init__(self, executable_path=None, silent=False, headless=False):
         # Get the directory of the current file
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        xpaths_path = os.path.join(current_dir, "xpaths.json")
+        dom_paths = os.path.join(current_dir, "dom_paths.json")
         
-        with open(xpaths_path, "r") as file:
-            self.XpathDict = json.load(file)
+        with open(dom_paths, "r") as file:
+            self.DomPathsDict = json.load(file)
 
         self.options = webdriver.ChromeOptions()
         if silent:
@@ -44,8 +44,8 @@ class Whatsapp:
             self.browser = webdriver.Chrome(options=self.options)
             
         # Initialize the specialized classes
-        self.browser_manager = BrowserManager(self.browser, self.XpathDict)
-        self.messages = MessageHandler(self.browser, self.XpathDict)
+        self.browser_manager = BrowserManager(self.browser, self.DomPathsDict)
+        self.messages = MessageHandler(self.browser, self.DomPathsDict)
     
     # Delegate browser management methods
     def test(self):

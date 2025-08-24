@@ -6,7 +6,6 @@ import asyncio
 
 jbh = ["Ach.", "Ok sir.", "JBH +1"]
 
-bawa = ["Is someone talking about bawa ? Bawa is king !"]
 
 
 bott = ["Hi from bot"]
@@ -21,9 +20,6 @@ async def func(element, msg):
         print(msg)
         bot.replyTo(element, jbh[random.randrange(len(jbh))])
 
-    if (re.search(r"^.*bawa.*$", msg[2].lower())):
-        print(msg)
-        bot.replyTo(element, bawa[random.randrange(len(bawa))])
 
     if (re.search(r"^.*bot.*$", msg[2].lower())):
         print(msg)
