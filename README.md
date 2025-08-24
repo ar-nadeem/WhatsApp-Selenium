@@ -1,7 +1,8 @@
 # WhatsApp-Selenium
 
-## Out of Date
-Currently I dont have enough free time to work on this, this version might be outdated due to changes in whatsapp web UI. However seeing the amount of forks and stars, I will try to find time to update this.
+## Project Status
+Development on this project has resumed!
+I’ve started working on the repository again and will continue improving and fixing issues.
 
 ## What is this
 
