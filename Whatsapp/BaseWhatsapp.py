@@ -30,6 +30,18 @@ class BaseWhatsapp:
         except:
             exit("Element not found")
         return element
+
+    def __wait_by_type(self,type, value, timeout=60):
+        """Wait for an element to be present on the page"""
+        print("Waiting for element: {}".format(value),
+              " To load, timeout: {}".format(timeout), " seconds remaining")
+        wait = WebDriverWait(self.browser, timeout)
+        try:
+            element = wait.until(
+                EC.presence_of_element_located((getattr(By, type), value)))
+        except:
+            exit("Element not found")
+        return element
     
     def __moveMouseToElement(self, element):
         """Move mouse to an element"""
@@ -49,10 +61,10 @@ class BaseWhatsapp:
             ActionChains(self.browser).send_keys(Keys.PAGE_UP).perform()
             time.sleep(0.1)
     
-    def __scroll(self, count, element_class):
+    def __scroll(self, count,elem):
         """Scroll up a specified number of times"""
         for i in range(count):
-            self.__sendPageUP(10)
+            self.__sendPageUP(elem,10)
             time.sleep(1.5)
 
     def __scrollDown(self, count):
@@ -61,9 +73,9 @@ class BaseWhatsapp:
             ActionChains(self.browser).send_keys(Keys.PAGE_DOWN).perform()
             time.sleep(0.1)
     
-    def __scrollToView(self, element_class):
+    def __scrollToView(self, element_type,element):
         """Scroll until the page content doesn't change anymore"""
-        elements = self.browser.find_elements(By.CLASS_NAME, element_class)
+        elements = self.browser.find_elements(getattr(By, element_type), element_class)
         if not elements:
             return
             

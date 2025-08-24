@@ -58,8 +58,8 @@ class Whatsapp:
     def getChats(self):
         return self.messages.getChats()
         
-    def getMessages(self, chatName, all=False, scroll=None, manualSync=False, element="_1AOLJ._1jHIY"):
-        return self.messages.getMessages(chatName, all, scroll, manualSync, element)
+    def getMessages(self, chatName, all=False, scroll=None, manualSync=False):
+        return self.messages.getMessages(chatName, all, scroll, manualSync)
         
     def getMessagesOutgoing(self, chatName, all=False, scroll=None, manualSync=False):
         return self.messages.getMessagesOutgoing(chatName, all, scroll, manualSync)
